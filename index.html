@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusCloud - Minecraft & VPS Hosting</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+        }
+        .card {
+            background-color: #2d3748; /* Slightly lighter dark background for cards */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, opacity 0.6s ease-out, transform 0.6s ease-out;
+            opacity: 0; /* Initial state for scroll animation */
+            transform: translateY(40px); /* Initial state for scroll animation */
+        }
+        .card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .btn-primary {
+            background-color: #48bb78; /* Green for primary actions */
+            color: #ffffff;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-out;
+        }
+        .btn-primary:hover {
+            background-color: #38a169;
+            transform: scale(1.05);
+        }
+        .animated-gradient {
+            background: linear-gradient(270deg, #10b981, #3b82f6, #8b5cf6); /* More vibrant gradient */
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* Custom styles for ore icons (using emojis as a simple representation) */
+        .ore-icon {
+            font-size: 3.5rem; /* Larger icons */
+            line-height: 1;
+            transition: transform 0.3s ease-in-out; /* Animation for icons */
+        }
+        .ore-icon:hover {
+            transform: scale(1.2); /* Scale up on hover */
+        }
+        /* Hero section text animations */
+        .hero-text-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .hero-text-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-button-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s; /* Delay for button */
+        }
+        .hero-button-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* NexusCloud logo glow */
+        .nexus-logo {
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="bg-gray-900 shadow-lg py-4 px-6 md:px-12">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-4xl md:text-5xl font-extrabold text-white tracking-wider nexus-logo">NexusCloud</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#hero" class="text-gray-300 hover:text-white transition duration-300">Home</a>
+                <a href="#minecraft-plans" class="text-gray-300 hover:text-white transition duration-300">Minecraft Plans</a>
+                <a href="#vps-plans" class="text-gray-300 hover:text-white transition duration-300">VPS Plans</a>
+                <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="text-gray-300 hover:text-white transition duration-300">Discord</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="#hero" class="block text-gray-300 hover:text-white transition duration-300 px-4 py-2 rounded-md">Home</a>
+            <a href="#minecraft-plans" class="block text-gray-300 hover:text-white transition duration-300 px-4 py-2 rounded-md">Minecraft Plans</a>
+            <a href="#vps-plans" class="block text-gray-300 hover:text-white transition duration-300 px-4 py-2 rounded-md">VPS Plans</a>
+            <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="block text-gray-300 hover:text-white transition duration-300 px-4 py-2 rounded-md">Discord</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative bg-gradient-to-r from-green-600 to-blue-700 text-white py-20 px-6 md:px-12 text-center overflow-hidden animated-gradient">
+            <!-- Subtle background pattern overlay -->
+            <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'6\' height=\'6\' viewBox=\'0 0 6 6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M5 0h1L0 6V5zM6 5v1H5z\'/%3E%3C/g%3E%3C/svg%3E'); background-size: 30px 30px;"></div>
+            <div class="relative z-10 container mx-auto">
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight drop-shadow-lg hero-text-animate">Unleash Your World with NexusCloud</h1>
+                <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90 hero-text-animate">Experience lightning-fast, reliable, and affordable server hosting for Minecraft and beyond.</p>
+                <a href="#minecraft-plans" class="inline-block bg-white text-green-700 font-bold py-4 px-10 rounded-full text-lg shadow-lg hover:bg-gray-200 transform hover:scale-105 transition duration-300 hero-button-animate">Explore Plans</a>
+            </div>
+        </section>
+
+        <!-- Minecraft Plans Section -->
+        <section id="minecraft-plans" class="py-16 px-6 md:px-12 bg-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-white">Minecraft Server Plans</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Dirt Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🟫</span> <!-- Dirt Block Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Dirt Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>1GB RAM</li>
+                            <li>50% CPU</li>
+                            <li>3GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹70<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Grass Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🟩</span> <!-- Grass Block Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Grass Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>2GB RAM</li>
+                            <li>100% CPU</li>
+                            <li>5GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹110<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Stone Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🪨</span> <!-- Stone Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Stone Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>4GB RAM</li>
+                            <li>150% CPU</li>
+                            <li>8GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹140<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Iron Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">⛏️</span> <!-- Pickaxe Emoji for Iron -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Iron Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>6GB RAM</li>
+                            <li>200% CPU</li>
+                            <li>8GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹190<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Gold Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🪙</span> <!-- Coin Emoji for Gold -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Gold Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>8GB RAM</li>
+                            <li>250% CPU</li>
+                            <li>10GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹300<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Lapis Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🔵</span> <!-- Blue Circle Emoji for Lapis -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Lapis Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>12GB RAM</li>
+                            <li>250% CPU</li>
+                            <li>15GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹390<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Redstone Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🔴</span> <!-- Red Circle Emoji for Redstone -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Redstone Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>16GB RAM</li>
+                            <li>300% CPU</li>
+                            <li>15GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹600<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Diamond Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">💎</span> <!-- Diamond Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Diamond Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>24GB RAM</li>
+                            <li>500% CPU</li>
+                            <li>20GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹999<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- Bedrock Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🪨</span> <!-- Bedrock (Stone) Emoji - using stone as a fallback -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">Bedrock Plan</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>32GB RAM</li>
+                            <li>800% CPU</li>
+                            <li>40GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹1599<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VPS Plans Section -->
+        <section id="vps-plans" class="py-16 px-6 md:px-12 bg-gray-900">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-white">VPS Server Plans</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- 8GB Intel Xeon Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">💻</span> <!-- Laptop/Computer Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">8GB Intel Xeon</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>8GB RAM</li>
+                            <li>Intel Xeon CPU</li>
+                            <li>30GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹300<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- 16GB Intel Xeon Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🖥️</span> <!-- Desktop Computer Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">16GB Intel Xeon</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>16GB RAM</li>
+                            <li>Intel Xeon CPU</li>
+                            <li>80GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹799<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- 32GB Ryzen 9 Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">⚡</span> <!-- High Voltage/Power Emoji -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">32GB Ryzen 9</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>32GB RAM</li>
+                            <li>Ryzen 9 CPU</li>
+                            <li>100GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹1499<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+
+                    <!-- 64GB Ryzen 9 Plan -->
+                    <div class="card rounded-lg p-8 shadow-xl flex flex-col items-center text-center">
+                        <span class="ore-icon mb-4">🚀</span> <!-- Rocket Emoji for High Performance -->
+                        <h3 class="text-3xl font-bold mb-3 text-white">64GB Ryzen 9</h3>
+                        <ul class="text-gray-300 text-lg space-y-2 mb-6">
+                            <li>64GB RAM</li>
+                            <li>Ryzen 9 CPU</li>
+                            <li>500GB SSD</li>
+                        </ul>
+                        <p class="text-4xl font-extrabold text-green-400 mb-6">₹3000<span class="text-xl text-gray-400">/month</span></p>
+                        <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="btn-primary py-3 px-8 rounded-full text-lg font-semibold">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-8 px-6 md:px-12 text-center text-gray-400">
+        <div class="container mx-auto">
+            <p class="mb-4">Join our community on Discord for support and updates!</p>
+            <a href="https://discord.gg/KC7Qpucue2" target="_blank" class="inline-block bg-indigo-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md hover:bg-indigo-700 transform hover:scale-105 transition duration-300">
+                Join Discord
+            </a>
+            <p class="mt-6 text-sm">&copy; 2024 NexusCloud. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Mobile menu toggle
+        const menuButton = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Intersection Observer for scroll animations (cards)
+        const cards = document.querySelectorAll('.card');
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the item is visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+
+        // Hero section text and button animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroTitle = document.querySelector('.hero-text-animate:first-of-type');
+            const heroSubtitle = document.querySelector('.hero-text-animate:last-of-type');
+            const heroButton = document.querySelector('.hero-button-animate');
+
+            // Add a small delay for a staggered effect
+            setTimeout(() => {
+                if (heroTitle) heroTitle.classList.add('is-visible');
+            }, 100);
+            setTimeout(() => {
+                if (heroSubtitle) heroSubtitle.classList.add('is-visible');
+            }, 300);
+            setTimeout(() => {
+                if (heroButton) heroButton.classList.add('is-visible');
+            }, 600);
+        });
+    </script>
+</body>
+</html>
